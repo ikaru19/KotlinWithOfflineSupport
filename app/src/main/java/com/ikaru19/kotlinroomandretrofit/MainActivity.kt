@@ -31,10 +31,10 @@ class MainActivity : AppCompatActivity() {
                     ClearAllData(this@MainActivity).execute()
                     Toast.makeText(this@MainActivity,"From Internet",Toast.LENGTH_LONG).show()
                     val data = response.body()
-                    tv_hasil.append("")
+                    tv_hasil.setText("")
                     data?.map {
                         Log.d("MYRETRO", "datanya ${it.body}")
-                        tv_hasil.append("datanya ${it.body}" + "\n")
+                        tv_hasil.append("datanya ${it.id}" + "\n")
                         InsertTask(this@MainActivity,it).execute()
                     }
                 }
@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(context,"From Local DB",Toast.LENGTH_SHORT).show()
                 context.tv_hasil.setText("")
                 for (i in 0..result.size - 1){
-                    context.tv_hasil.append(result[i].body + "\n")
+                    context.tv_hasil.append(result[i].id.toString() + "\n")
                 }
             }else{
                 Toast.makeText(context,"You need to connect internet first",Toast.LENGTH_SHORT).show()
@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
     private class ClearAllData(var context: MainActivity) : AsyncTask<Void,Void,Boolean>(){
         override fun doInBackground(vararg params: Void?): Boolean {
             context.postDatabase!!.postDao().deleteAll()
-            return true
+                   return true
         }
 
         override fun onPostExecute(result: Boolean?) {
