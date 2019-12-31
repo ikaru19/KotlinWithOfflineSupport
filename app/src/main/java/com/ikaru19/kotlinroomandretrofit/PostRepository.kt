@@ -10,15 +10,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import android.content.Intent
-
-
-
-
-
-
-
-
-
+import android.content.SharedPreferences
 
 
 class PostRepository(context: Context){
@@ -26,6 +18,9 @@ class PostRepository(context: Context){
     var postDatabase : PostRoomDatabase? = null
     var posts : List<PostModel>? = null
     val postServices = DataRepository.create()
+    private var PRIVATE_MODE = 0
+    private val PREF_NAME = "firsttimer"
+    val sharedPref: SharedPreferences = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE)
 
 
     init {
@@ -45,7 +40,12 @@ class PostRepository(context: Context){
                     data?.map {
                         InsertTask(it).execute()
                     }
-                    showDialog()
+                    if (sharedPref.getBoolean(PREF_NAME,true)){
+                        showDialog()
+                        val editor=sharedPref.edit()
+                        editor.putBoolean(PREF_NAME,false)
+                        editor.commit()
+                    }
                 }
             }
 
